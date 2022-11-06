@@ -1,4 +1,4 @@
-package br.com.viniciusbellini.piorfilmeapi.model;
+package br.com.viniciusbellini.piorfilmeapi.models;
 
 
 import javax.persistence.Column;
@@ -6,34 +6,41 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
-public class Premiacao implements Serializable {
+@Table(name = "TB_PREMIACAO")
+public class PremiacaoModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String YEAR_COLUMN = "award_year";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = YEAR_COLUMN)
-    private int year;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+    @Column(name = YEAR_COLUMN, nullable = false)
+    private String year;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String studios;
+    @Column(nullable = false)
     private String producers;
+    @Column(nullable = false)
     private boolean winner;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -73,7 +80,7 @@ public class Premiacao implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Premiacao premiacao = (Premiacao) o;
+        PremiacaoModel premiacao = (PremiacaoModel) o;
         return Objects.equals(id, premiacao.id);
     }
 
