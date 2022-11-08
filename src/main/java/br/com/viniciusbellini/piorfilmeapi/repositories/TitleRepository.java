@@ -1,11 +1,9 @@
 package br.com.viniciusbellini.piorfilmeapi.repositories;
 
-import br.com.viniciusbellini.piorfilmeapi.models.PremiacaoModel;
+import br.com.viniciusbellini.piorfilmeapi.models.TitleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface PremiacaoRepository extends JpaRepository<PremiacaoModel, UUID> {
+public interface TitleRepository extends JpaRepository<TitleModel, Long> {
 }
