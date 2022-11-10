@@ -26,8 +26,9 @@ public class TitleModel implements Serializable, Comparable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
-    @Column(name = "release_year")
+    @Column(name = "release_year", nullable = false)
     private String year;
     private boolean winner;
     @ManyToMany(fetch = FetchType.EAGER)

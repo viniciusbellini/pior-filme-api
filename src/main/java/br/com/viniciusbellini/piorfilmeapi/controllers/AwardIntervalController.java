@@ -17,7 +17,7 @@ public class AwardIntervalController {
 
     @GetMapping
     public ResponseEntity allAwardsIntervals() {
-        return ResponseEntity.ok().body(awardIntervalService.findAll());
+        return ResponseEntity.ok().body(awardIntervalService.findAwardsIntervals());
     }
 
 }

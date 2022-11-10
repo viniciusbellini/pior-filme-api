@@ -69,7 +69,7 @@ public class PremiacaoOnStart {
         List<TitleModel> winnersTitles = titleService.findAll().stream().sorted().filter(TitleModel::isWinner).collect(Collectors.toList());
         HashMap<ProducerModel, List<Integer>> stringListHashMap = new HashMap<>();
 
-        winnersTitles.stream().forEach(title ->
+        winnersTitles.forEach(title ->
                 title.getProducers().forEach(producer -> {
                     if (!stringListHashMap.containsKey(producer)) {
                         List<Integer> years = new ArrayList<>();
@@ -97,7 +97,7 @@ public class PremiacaoOnStart {
                     interval.setPreviousWin(previousWing);
                     Integer followingWin = value.get(i);
                     interval.setFollowingWin(followingWin);
-                    interval.setIntervalYear(followingWin - previousWing);
+                    interval.setInterval(followingWin - previousWing);
                     intervaloDePremios.add(interval);
                 }
             }
