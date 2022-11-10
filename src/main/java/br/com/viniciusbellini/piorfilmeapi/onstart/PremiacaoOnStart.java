@@ -48,20 +48,20 @@ public class PremiacaoOnStart {
 
         String pasta = System.getProperty("user.dir") + "\\src\\main\\resources\\";
         String nomeArquivo = "movielist.csv";
-        List<Record> allRecords;
+        List<Record> allTitles;
 
         try {
             CsvParser parser = new CsvParser(settings);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(pasta + nomeArquivo));
-            allRecords = parser.parseAllRecords(bufferedReader);
+            allTitles = parser.parseAllRecords(bufferedReader);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        producerService.saveAll(getAllProducers(allRecords));
-        studioService.saveAll(getAllStudios(allRecords));
-        titleService.saveAll(getAllTitles(allRecords));
+        producerService.saveAll(getAllProducers(allTitles));
+        studioService.saveAll(getAllStudios(allTitles));
+        titleService.saveAll(getAllTitles(allTitles));
         awardIntervalService.saveAll(getAllInvervals());
     }
 
@@ -89,7 +89,6 @@ public class PremiacaoOnStart {
             List<Integer> value = producerModelListEntry.getValue();
 
             if (value.size() > 1) {
-
                 for (int i = 1; i < value.size(); i++) {
                     AwardIntervalModel interval = new AwardIntervalModel();
                     interval.setProducer(producerModelListEntry.getKey().getName());
@@ -105,54 +104,48 @@ public class PremiacaoOnStart {
         return intervaloDePremios;
     }
 
-    private List<ProducerModel> getAllProducers(List<Record> all) {
+    private List<ProducerModel> getAllProducers(List<Record> allTitles) {
         HashSet<String> producers = new HashSet<>();
 
-        all.forEach(cada -> {
-            String[] splitProducers = cada.getString("producers").split(",\\s|and\\s");
+        allTitles.forEach(title -> {
+            String[] splitProducers = title.getString("producers").split(",\\s|and\\s");
             for (String producer : splitProducers) {
                 producers.add(producer.trim());
             }
         });
 
         List<ProducerModel> producersList = new ArrayList<>();
-        producers.forEach(cada -> {
-            if (!cada.isEmpty()) {
-                ProducerModel producer = new ProducerModel();
-                producer.setName(cada);
-                producersList.add(producer);
-            }
+        producers.forEach(producer -> {
+            if (!producer.isEmpty())
+                producersList.add(new ProducerModel(producer));
         });
 
         return producersList;
     }
 
-    private List<StudioModel> getAllStudios(List<Record> all) {
+    private List<StudioModel> getAllStudios(List<Record> allTitles) {
         HashSet<String> studios = new HashSet<>();
 
-        all.forEach(cada -> {
-            String[] splitStudios = cada.getString("studios").split(",\\s|and\\s");
+        allTitles.forEach(title -> {
+            String[] splitStudios = title.getString("studios").split(",\\s|and\\s");
             for (String studio : splitStudios) {
                 studios.add(studio.trim());
             }
         });
 
         List<StudioModel> studiosList = new ArrayList<>();
-        studios.forEach(cada -> {
-            if (!cada.isEmpty()) {
-                StudioModel studio = new StudioModel();
-                studio.setName(cada);
-                studiosList.add(studio);
-            }
+        studios.forEach(studio -> {
+            if (!studio.isEmpty())
+                studiosList.add(new StudioModel(studio));
         });
 
         return studiosList;
     }
 
-    private List<TitleModel> getAllTitles(List<Record> allRecords) {
+    private List<TitleModel> getAllTitles(List<Record> allTitles) {
 
         List<TitleModel> titles = new ArrayList<>();
-        allRecords.forEach(cada -> {
+        allTitles.forEach(cada -> {
             TitleModel title = new TitleModel();
             title.setName(cada.getString("title"));
             title.setYear(cada.getString("year"));
@@ -166,7 +159,7 @@ public class PremiacaoOnStart {
 
             List<ProducerModel> producers = new ArrayList<>();
             for (String producer : cada.getString("producers").split(",\\s|and\\s")) {
-                producers.add(producerService.findByName(producer));
+                producers.add(producerService.findByName(producer.trim()));
             }
             title.setProducers(producers);
             titles.add(title);

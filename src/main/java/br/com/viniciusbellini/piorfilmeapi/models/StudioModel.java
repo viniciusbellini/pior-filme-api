@@ -1,6 +1,7 @@
 package br.com.viniciusbellini.piorfilmeapi.models;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 
 @Data
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "STUDIO")
 public class StudioModel implements Serializable {
@@ -24,5 +26,9 @@ public class StudioModel implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String name;
+
+    public StudioModel(String name) {
+        this.name = name;
+    }
 }
 

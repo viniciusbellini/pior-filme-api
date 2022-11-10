@@ -2,6 +2,7 @@ package br.com.viniciusbellini.piorfilmeapi.models;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "PRODUCER")
 public class ProducerModel implements Serializable {
 
@@ -23,5 +25,9 @@ public class ProducerModel implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String name;
+
+    public ProducerModel(String name) {
+        this.name = name;
+    }
 }
 

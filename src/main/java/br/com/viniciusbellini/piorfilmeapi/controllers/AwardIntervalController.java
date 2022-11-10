@@ -1,5 +1,6 @@
 package br.com.viniciusbellini.piorfilmeapi.controllers;
 
+import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalDTO;
 import br.com.viniciusbellini.piorfilmeapi.services.AwardIntervalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,8 @@ public class AwardIntervalController {
     }
 
     @GetMapping
-    public ResponseEntity allAwardsIntervals() {
-        return ResponseEntity.ok().body(awardIntervalService.findAwardsIntervals());
+    public ResponseEntity<AwardIntervalDTO> allAwardsIntervals() {
+        return awardIntervalService.findAwardsIntervals();
     }
 
 }

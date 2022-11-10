@@ -3,6 +3,7 @@ package br.com.viniciusbellini.piorfilmeapi.services;
 import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
 import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalDTO;
 import br.com.viniciusbellini.piorfilmeapi.repositories.AwardIntervalRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,13 +25,17 @@ public class AwardIntervalService {
         awardIntervalRepository.saveAll(awardsIntervals);
     }
 
-    public AwardIntervalDTO findAwardsIntervals() {
-        List<AwardIntervalModel> all = awardIntervalRepository.findAll();
-        Map<Integer, List<AwardIntervalModel>> groupingByInterval = all.stream().sorted().collect(Collectors.groupingBy(AwardIntervalModel::getInterval));
+    public ResponseEntity<AwardIntervalDTO> findAwardsIntervals() {
+        Map<Integer, List<AwardIntervalModel>> groupingByInterval = awardIntervalRepository.findAll().stream().sorted().collect(Collectors.groupingBy(AwardIntervalModel::getInterval));
+
+        if (groupingByInterval.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         List<AwardIntervalModel> fastestAwards = groupingByInterval.entrySet().stream().min(Map.Entry.comparingByKey()).get().getValue();
         List<AwardIntervalModel> longestAwardsInterval = groupingByInterval.entrySet().stream().max(Map.Entry.comparingByKey()).get().getValue();
 
-        return AwardIntervalDTO.transformToDTO(fastestAwards, longestAwardsInterval);
+        return ResponseEntity.ok().body(AwardIntervalDTO.transformToDTO(fastestAwards, longestAwardsInterval));
     }
 
 }
