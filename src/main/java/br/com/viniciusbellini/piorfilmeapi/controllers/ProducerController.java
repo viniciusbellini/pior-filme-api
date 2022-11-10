@@ -16,7 +16,7 @@ public class ProducerController {
     }
 
     @GetMapping
-    public ResponseEntity listar() {
+    public ResponseEntity allProducers() {
         return ResponseEntity.ok().body(producerService.findAll());
     }
 

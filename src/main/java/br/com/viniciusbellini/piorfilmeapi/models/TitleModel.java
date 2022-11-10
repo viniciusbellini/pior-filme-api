@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "TITLE")
-public class TitleModel implements Serializable {
+public class TitleModel implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +30,7 @@ public class TitleModel implements Serializable {
     @Column(name = "release_year")
     private String year;
     private boolean winner;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "title_producer",
             joinColumns = @JoinColumn(name = "title_id"),
@@ -48,5 +49,9 @@ public class TitleModel implements Serializable {
         this.winner = winner != null && winner.equals("yes");
     }
 
+    @Override
+    public int compareTo(Object o) {
+        TitleModel other = (TitleModel) o;
+        return this.year.compareTo(other.year);
+    }
 }
-

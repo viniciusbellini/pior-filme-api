@@ -16,7 +16,7 @@ public class TitleController {
     }
 
     @GetMapping
-    public ResponseEntity listar() {
+    public ResponseEntity allTitles() {
         return ResponseEntity.ok().body(titleService.findAll());
     }
 

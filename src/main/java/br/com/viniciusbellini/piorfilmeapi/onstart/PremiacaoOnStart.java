@@ -1,8 +1,10 @@
 package br.com.viniciusbellini.piorfilmeapi.onstart;
 
+import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
 import br.com.viniciusbellini.piorfilmeapi.models.ProducerModel;
 import br.com.viniciusbellini.piorfilmeapi.models.StudioModel;
 import br.com.viniciusbellini.piorfilmeapi.models.TitleModel;
+import br.com.viniciusbellini.piorfilmeapi.services.AwardIntervalService;
 import br.com.viniciusbellini.piorfilmeapi.services.ProducerService;
 import br.com.viniciusbellini.piorfilmeapi.services.StudioService;
 import br.com.viniciusbellini.piorfilmeapi.services.TitleService;
@@ -16,8 +18,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class PremiacaoOnStart {
@@ -25,11 +30,13 @@ public class PremiacaoOnStart {
     private final StudioService studioService;
     private final ProducerService producerService;
     private final TitleService titleService;
+    private final AwardIntervalService awardIntervalService;
 
-    public PremiacaoOnStart(StudioService studioService, ProducerService producerService, TitleService titleService) {
+    public PremiacaoOnStart(StudioService studioService, ProducerService producerService, TitleService titleService, AwardIntervalService awardIntervalService) {
         this.studioService = studioService;
         this.producerService = producerService;
         this.titleService = titleService;
+        this.awardIntervalService = awardIntervalService;
     }
 
     @PostConstruct
@@ -55,6 +62,47 @@ public class PremiacaoOnStart {
         producerService.saveAll(getAllProducers(allRecords));
         studioService.saveAll(getAllStudios(allRecords));
         titleService.saveAll(getAllTitles(allRecords));
+        awardIntervalService.saveAll(getAllInvervals());
+    }
+
+    private List<AwardIntervalModel> getAllInvervals() {
+        List<TitleModel> winnersTitles = titleService.findAll().stream().sorted().filter(TitleModel::isWinner).collect(Collectors.toList());
+        HashMap<ProducerModel, List<Integer>> stringListHashMap = new HashMap<>();
+
+        winnersTitles.stream().forEach(title ->
+                title.getProducers().forEach(producer -> {
+                    if (!stringListHashMap.containsKey(producer)) {
+                        List<Integer> years = new ArrayList<>();
+                        years.add(Integer.valueOf(title.getYear()));
+                        stringListHashMap.put(producer, years);
+                    } else {
+                        List<Integer> winnerYears = stringListHashMap.get(producer);
+                        winnerYears.add(Integer.valueOf(title.getYear()));
+                        stringListHashMap.put(producer, winnerYears);
+                    }
+                })
+        );
+
+        List<AwardIntervalModel> intervaloDePremios = new ArrayList<>();
+
+        for (Map.Entry<ProducerModel, List<Integer>> producerModelListEntry : stringListHashMap.entrySet()) {
+            List<Integer> value = producerModelListEntry.getValue();
+
+            if (value.size() > 1) {
+
+                for (int i = 1; i < value.size(); i++) {
+                    AwardIntervalModel interval = new AwardIntervalModel();
+                    interval.setProducer(producerModelListEntry.getKey().getName());
+                    Integer previousWing = value.get(i-1);
+                    interval.setPreviousWin(previousWing);
+                    Integer followingWin = value.get(i);
+                    interval.setFollowingWin(followingWin);
+                    interval.setIntervalYear(followingWin - previousWing);
+                    intervaloDePremios.add(interval);
+                }
+            }
+        }
+        return intervaloDePremios;
     }
 
     private List<ProducerModel> getAllProducers(List<Record> all) {

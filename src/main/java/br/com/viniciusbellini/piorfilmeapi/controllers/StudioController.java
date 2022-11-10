@@ -16,7 +16,7 @@ public class StudioController {
     }
 
     @GetMapping
-    public ResponseEntity listar() {
+    public ResponseEntity allStudios() {
         return ResponseEntity.ok().body(studioService.findAll());
     }
 
