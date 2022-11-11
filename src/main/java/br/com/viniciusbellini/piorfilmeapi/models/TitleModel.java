@@ -55,4 +55,7 @@ public class TitleModel implements Serializable, Comparable {
         TitleModel other = (TitleModel) o;
         return this.year.compareTo(other.year);
     }
+    public Integer getYear() {
+        return Integer.parseInt(this.year);
+    }
 }

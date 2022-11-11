@@ -17,8 +17,9 @@ public class StudioService {
     }
 
     @Transactional
-    public void saveAll(List<StudioModel> studios) {
-        studioRepository.saveAll(studios);
+    public StudioModel save(String name) {
+        StudioModel studioFound = findByName(name);
+        return studioFound != null ? studioFound : studioRepository.save(new StudioModel(name.trim()));
     }
 
     public List<StudioModel> findAll() {
