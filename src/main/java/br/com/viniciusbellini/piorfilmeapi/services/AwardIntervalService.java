@@ -1,7 +1,7 @@
 package br.com.viniciusbellini.piorfilmeapi.services;
 
-import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
 import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalDTO;
+import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
 import br.com.viniciusbellini.piorfilmeapi.models.ProducerModel;
 import br.com.viniciusbellini.piorfilmeapi.models.TitleModel;
 import br.com.viniciusbellini.piorfilmeapi.repositories.AwardIntervalRepository;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,24 +64,21 @@ public class AwardIntervalService {
         );
 
         List<AwardIntervalModel> intervaloDePremios = new ArrayList<>();
-
-        for (Map.Entry<ProducerModel, List<Integer>> producerModelListEntry : producerWinner.entrySet()) {
-            List<Integer> value = producerModelListEntry.getValue();
-
-            if (value.size() > 1) {
-                for (int i = 1; i < value.size(); i++) {
-                    AwardIntervalModel interval = new AwardIntervalModel();
-                    interval.setProducer(producerModelListEntry.getKey().getName());
-                    Integer previousWing = value.get(i-1);
-                    interval.setPreviousWin(previousWing);
-                    Integer followingWin = value.get(i);
-                    interval.setFollowingWin(followingWin);
-                    interval.setInterval(followingWin - previousWing);
-                    intervaloDePremios.add(interval);
-                }
+        producerWinner.forEach((producer, years) -> {
+            var producerName = producer.getName();
+            Iterator<Integer> iterator = years.iterator();
+            var previewsWin = iterator.next();
+            while (iterator.hasNext()) {
+                AwardIntervalModel interval = new AwardIntervalModel();
+                interval.setProducer(producerName);
+                interval.setPreviousWin(previewsWin);
+                var followingWin = iterator.next();
+                interval.setFollowingWin(followingWin);
+                interval.setInterval(followingWin - previewsWin);
+                intervaloDePremios.add(interval);
+                previewsWin = followingWin;
             }
-        }
+        });
         return intervaloDePremios;
     }
-
 }
