@@ -48,16 +48,21 @@ public class TitleService {
             title.setYear(cada.getString("year"));
             title.setWinner(cada.getString("winner"));
 
-            List<String> splitStudios = Arrays.stream(cada.getString("studios").split(",\\s|and\\s")).filter(studio -> !studio.isBlank()).collect(Collectors.toList());
-            List<StudioModel> studios = splitStudios.stream().map(studioService::save).collect(Collectors.toList());
-            title.setStudios(studios);
-
-            List<String> splitProducers = Arrays.stream(cada.getString("producers").split(",\\s|and\\s")).filter(producer -> !producer.isBlank()).collect(Collectors.toList());
-            List<ProducerModel> producers = splitProducers.stream().map(producerService::save).collect(Collectors.toList());
-            title.setProducers(producers);
+            title.setStudios(createStudiosRelatedTitle(cada));
+            title.setProducers(createProducerRelatedTitle(cada));
             titles.add(title);
         });
 
         return titles;
+    }
+
+    private List<ProducerModel> createProducerRelatedTitle(Record cada) {
+        List<String> splitProducers = Arrays.stream(cada.getString("producers").split(",\\s|and\\s")).filter(producer -> !producer.isBlank()).collect(Collectors.toList());
+        return splitProducers.stream().map(producerService::save).collect(Collectors.toList());
+    }
+
+    private List<StudioModel> createStudiosRelatedTitle(Record cada) {
+        List<String> splitStudios = Arrays.stream(cada.getString("studios").split(",\\s|and\\s")).filter(studio -> !studio.isBlank()).collect(Collectors.toList());
+        return splitStudios.stream().map(studioService::save).collect(Collectors.toList());
     }
 }
