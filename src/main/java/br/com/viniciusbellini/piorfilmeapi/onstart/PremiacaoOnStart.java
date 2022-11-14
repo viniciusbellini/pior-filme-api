@@ -1,10 +1,10 @@
 package br.com.viniciusbellini.piorfilmeapi.onstart;
 
+import br.com.viniciusbellini.piorfilmeapi.config.AppProperties;
 import br.com.viniciusbellini.piorfilmeapi.services.TitleService;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,11 +18,11 @@ import java.util.List;
 public class PremiacaoOnStart {
 
     private final TitleService titleService;
-    @Value("${csv.name}")
-    String csvName;
+    private final AppProperties appProperties;
 
-    public PremiacaoOnStart(TitleService titleService) {
+    public PremiacaoOnStart(TitleService titleService, AppProperties appProperties) {
         this.titleService = titleService;
+        this.appProperties = appProperties;
     }
 
     @PostConstruct
@@ -35,7 +35,7 @@ public class PremiacaoOnStart {
         List<Record> allTitles;
         try {
             CsvParser parser = new CsvParser(settings);
-            URL resource = PremiacaoOnStart.class.getResource("/" + csvName + ".csv");
+            URL resource = getClass().getResource("/" + appProperties.getCsvName() + ".csv");
             if (resource == null)
                 throw new FileNotFoundException();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(resource.getPath()));

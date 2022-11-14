@@ -4,11 +4,9 @@ import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalDTO;
 import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
 import br.com.viniciusbellini.piorfilmeapi.models.ProducerModel;
 import br.com.viniciusbellini.piorfilmeapi.models.TitleModel;
-import br.com.viniciusbellini.piorfilmeapi.repositories.AwardIntervalRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,21 +17,14 @@ import java.util.stream.Collectors;
 @Service
 public class AwardIntervalService {
 
-    private final AwardIntervalRepository awardIntervalRepository;
     private final TitleService titleService;
 
-    public AwardIntervalService(AwardIntervalRepository awardIntervalRepository, TitleService titleService) {
-        this.awardIntervalRepository = awardIntervalRepository;
+    public AwardIntervalService(TitleService titleService) {
         this.titleService = titleService;
     }
 
-    @Transactional
-    public void generateTable() {
-        awardIntervalRepository.saveAll(getAllInvervals());
-    }
-
     public ResponseEntity<AwardIntervalDTO> findAwardsIntervals() {
-        Map<Integer, List<AwardIntervalModel>> groupingByInterval = awardIntervalRepository.findAll().stream().sorted().collect(Collectors.groupingBy(AwardIntervalModel::getInterval));
+        Map<Integer, List<AwardIntervalModel>> groupingByInterval = getAllInvervals().stream().sorted().collect(Collectors.groupingBy(AwardIntervalModel::getInterval));
 
         if (groupingByInterval.isEmpty()) {
             return ResponseEntity.notFound().build();
