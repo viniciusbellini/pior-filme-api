@@ -1,9 +1,9 @@
 package br.com.viniciusbellini.piorfilmeapi.services;
 
 import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalDTO;
-import br.com.viniciusbellini.piorfilmeapi.models.AwardIntervalModel;
-import br.com.viniciusbellini.piorfilmeapi.models.ProducerModel;
-import br.com.viniciusbellini.piorfilmeapi.models.TitleModel;
+import br.com.viniciusbellini.piorfilmeapi.models.AwardInterval;
+import br.com.viniciusbellini.piorfilmeapi.models.Producer;
+import br.com.viniciusbellini.piorfilmeapi.models.Title;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +24,21 @@ public class AwardIntervalService {
     }
 
     public ResponseEntity<AwardIntervalDTO> findAwardsIntervals() {
-        Map<Integer, List<AwardIntervalModel>> groupingByInterval = getAllInvervals().stream().sorted().collect(Collectors.groupingBy(AwardIntervalModel::getInterval));
+        Map<Integer, List<AwardInterval>> groupingByInterval = getAllInvervals().stream().sorted().collect(Collectors.groupingBy(AwardInterval::getInterval));
 
         if (groupingByInterval.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        List<AwardIntervalModel> fastestAwards = groupingByInterval.entrySet().stream().min(Map.Entry.comparingByKey()).get().getValue();
-        List<AwardIntervalModel> longestAwardsInterval = groupingByInterval.entrySet().stream().max(Map.Entry.comparingByKey()).get().getValue();
+        List<AwardInterval> fastestAwards = groupingByInterval.entrySet().stream().min(Map.Entry.comparingByKey()).get().getValue();
+        List<AwardInterval> longestAwardsInterval = groupingByInterval.entrySet().stream().max(Map.Entry.comparingByKey()).get().getValue();
 
         return ResponseEntity.ok().body(AwardIntervalDTO.transformToDTO(fastestAwards, longestAwardsInterval));
     }
 
-    private List<AwardIntervalModel> getAllInvervals() {
-        List<TitleModel> winnersTitles = titleService.findAll().stream().sorted().filter(TitleModel::isWinner).collect(Collectors.toList());
-        HashMap<ProducerModel, List<Integer>> producerWinner = new HashMap<>();
+    private List<AwardInterval> getAllInvervals() {
+        List<Title> winnersTitles = titleService.findAll().stream().sorted().filter(Title::isWinner).collect(Collectors.toList());
+        HashMap<Producer, List<Integer>> producerWinner = new HashMap<>();
 
         winnersTitles.forEach(title ->
                 title.getProducers().forEach(producer -> {
@@ -54,13 +54,13 @@ public class AwardIntervalService {
                 })
         );
 
-        List<AwardIntervalModel> intervaloDePremios = new ArrayList<>();
+        List<AwardInterval> intervaloDePremios = new ArrayList<>();
         producerWinner.forEach((producer, years) -> {
             var producerName = producer.getName();
             Iterator<Integer> iterator = years.iterator();
             var previewsWin = iterator.next();
             while (iterator.hasNext()) {
-                AwardIntervalModel interval = new AwardIntervalModel();
+                AwardInterval interval = new AwardInterval();
                 interval.setProducer(producerName);
                 interval.setPreviousWin(previewsWin);
                 var followingWin = iterator.next();

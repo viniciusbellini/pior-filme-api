@@ -5,6 +5,7 @@ import br.com.viniciusbellini.piorfilmeapi.services.TitleService;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +15,7 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.List;
 
+@Profile("dev")
 @Component
 public class PremiacaoOnStart {
 

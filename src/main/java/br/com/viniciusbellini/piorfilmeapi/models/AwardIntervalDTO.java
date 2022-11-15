@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class AwardIntervalDTO {
 
-    private List<AwardIntervalModel> min;
-    private List<AwardIntervalModel> max;
+    private List<AwardInterval> min;
+    private List<AwardInterval> max;
 
-    public static AwardIntervalDTO transformToDTO(List<AwardIntervalModel> min, List<AwardIntervalModel> max) {
+    public static AwardIntervalDTO transformToDTO(List<AwardInterval> min, List<AwardInterval> max) {
         return new AwardIntervalDTO(min, max);
     }
 }

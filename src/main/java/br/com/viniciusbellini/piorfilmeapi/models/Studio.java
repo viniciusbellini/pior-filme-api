@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "STUDIO")
-public class StudioModel implements Serializable {
+public class Studio implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class StudioModel implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    public StudioModel(String name) {
+    public Studio(String name) {
         this.name = name;
     }
 }

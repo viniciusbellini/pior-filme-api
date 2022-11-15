@@ -9,7 +9,7 @@ import javax.persistence.Column;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class AwardIntervalModel implements Comparable {
+public class AwardInterval implements Comparable {
 
     @Column(nullable = false)
     private String producer;
@@ -22,7 +22,7 @@ public class AwardIntervalModel implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        AwardIntervalModel other = (AwardIntervalModel) o;
+        AwardInterval other = (AwardInterval) o;
         return this.producer.compareTo(other.producer)
                 + this.interval.compareTo(other.interval);
     }

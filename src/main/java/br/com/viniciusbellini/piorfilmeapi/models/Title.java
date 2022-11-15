@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "TITLE")
-public class TitleModel implements Serializable, Comparable {
+public class Title implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,14 +37,14 @@ public class TitleModel implements Serializable, Comparable {
             joinColumns = @JoinColumn(name = "title_id"),
             inverseJoinColumns = @JoinColumn(name = "producer_id")
     )
-    List<ProducerModel> producers;
+    List<Producer> producers;
     @ManyToMany
     @JoinTable(
             name = "title_studio",
             joinColumns = @JoinColumn(name = "title_id"),
             inverseJoinColumns = @JoinColumn(name = "studio_id")
     )
-    List<StudioModel> studios;
+    List<Studio> studios;
 
     public void setWinner(String winner) {
         this.winner = winner != null && winner.equals("yes");
@@ -52,7 +52,7 @@ public class TitleModel implements Serializable, Comparable {
 
     @Override
     public int compareTo(Object o) {
-        TitleModel other = (TitleModel) o;
+        Title other = (Title) o;
         return this.year.compareTo(other.year);
     }
     public Integer getYear() {

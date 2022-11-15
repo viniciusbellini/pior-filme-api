@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @Table(name = "PRODUCER")
-public class ProducerModel implements Serializable {
+public class Producer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class ProducerModel implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    public ProducerModel(String name) {
+    public Producer(String name) {
         this.name = name;
     }
 }

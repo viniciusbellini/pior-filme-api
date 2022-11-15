@@ -1,13 +1,11 @@
 package br.com.viniciusbellini.piorfilmeapi.repositories;
 
-import br.com.viniciusbellini.piorfilmeapi.models.StudioModel;
+import br.com.viniciusbellini.piorfilmeapi.models.Studio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface StudioRepository extends JpaRepository<StudioModel, Long> {
+public interface StudioRepository extends JpaRepository<Studio, Long> {
 
-    StudioModel findByName(String name);
+    Studio findByName(String name);
 }
