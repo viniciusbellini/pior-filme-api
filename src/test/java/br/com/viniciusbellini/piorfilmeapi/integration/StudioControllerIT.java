@@ -10,21 +10,23 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+
+import static org.springframework.test.annotation.DirtiesContext.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PiorFilmeApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class StudioControllerIT {
 
     @Autowired
     private StudioService studioService;
 
-    @Transactional
     @Test
     public void createStudioHappyDay() {
         assertNoRegisteredStudios();
@@ -32,19 +34,16 @@ public class StudioControllerIT {
         Assertions.assertThat(studioService.findByName("Universal Studios")).isNotNull();
     }
 
-    @Transactional
     @Test(expected = ConstraintViolationException.class)
     public void dontRegisterStudioWithEmptyName() {
         studioService.save(new Studio(""));
     }
 
-    @Transactional
     @Test(expected = ConstraintViolationException.class)
     public void dontRegisterStudioWithNullName() {
         studioService.save(new Studio(null));
     }
 
-    @Transactional
     @Test
     public void givenStudioAlreadyRegisteredDontRegisterAgain() {
         assertNoRegisteredStudios();

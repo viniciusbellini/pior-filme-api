@@ -10,21 +10,22 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
-import java.util.List;
+
+import static org.springframework.test.annotation.DirtiesContext.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class TitleControllerIT {
 
     @Autowired
     private TitleService titleService;
 
-    @Transactional
     @Test
     public void createTitleHappyDay() {
 
@@ -37,7 +38,6 @@ public class TitleControllerIT {
         Assertions.assertThat(titleService.findByName("Can't Stop the Music")).isNotNull();
     }
 
-    @Transactional
     @Test(expected = ConstraintViolationException.class)
     public void dontRegisterTitleWithEmptyName() {
         Title title = new Title();
@@ -47,7 +47,6 @@ public class TitleControllerIT {
         titleService.save(title);
     }
 
-    @Transactional
     @Test(expected = ConstraintViolationException.class)
     public void dontRegisterTitleWithNullName() {
         Title title = new Title();
@@ -56,7 +55,6 @@ public class TitleControllerIT {
         titleService.save(title);
     }
 
-    @Transactional
     @Test(expected = TitleAlreadyExistsException.class)
     public void givenTitleAlreadyRegisteredDontRegisterAgain() {
         Title title = new Title();
