@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,9 +27,11 @@ public class Title implements Serializable, Comparable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(unique = true)
+    @NotBlank
     private String name;
-    @Column(name = "release_year", nullable = false)
+    @Column(name = "release_year")
+    @NotBlank
     private String year;
     private boolean winner;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -45,6 +48,7 @@ public class Title implements Serializable, Comparable {
             inverseJoinColumns = @JoinColumn(name = "studio_id")
     )
     List<Studio> studios;
+
 
     public void setWinner(String winner) {
         this.winner = winner != null && winner.equals("yes");

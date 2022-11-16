@@ -1,16 +1,12 @@
 package br.com.viniciusbellini.piorfilmeapi.services;
 
+import br.com.viniciusbellini.piorfilmeapi.error.ApplicationExceptions;
 import br.com.viniciusbellini.piorfilmeapi.models.Producer;
 import br.com.viniciusbellini.piorfilmeapi.repositories.ProducerRepository;
-import com.univocity.parsers.common.record.Record;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProducerService {
@@ -21,6 +17,7 @@ public class ProducerService {
         this.producerRepository = producerRepository;
     }
 
+    @Transactional
     public Producer save(String name) {
         Producer producer = findByName(name);
         return producer != null ? producer : save(new Producer(name));
@@ -32,21 +29,13 @@ public class ProducerService {
     }
 
     public List<Producer> findAll() {
+        List<Producer> producers = producerRepository.findAll();
+        if (producers.isEmpty())
+          throw new ApplicationExceptions("There are no registered producers!");
         return producerRepository.findAll();
     }
 
     public Producer findByName(String name) {
         return producerRepository.findByName(name);
-    }
-
-    private Set<Producer> getAllProducers(List<Record> allTitles) {
-        Set<Producer> producers = new LinkedHashSet<>();
-
-        allTitles.forEach(title -> {
-            List<String> splitProducers = Arrays.stream(title.getString("producers").split(",\\s|and\\s")).filter(producer -> !producer.isBlank()).collect(Collectors.toList());
-            splitProducers.forEach(producer -> producers.add(new Producer(producer.trim())));
-        });
-
-        return producers;
     }
 }

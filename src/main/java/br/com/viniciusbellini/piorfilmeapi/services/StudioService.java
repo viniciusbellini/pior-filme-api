@@ -16,10 +16,14 @@ public class StudioService {
         this.studioRepository = studioRepository;
     }
 
-    @Transactional
     public Studio save(String name) {
         Studio studioFound = findByName(name);
-        return studioFound != null ? studioFound : studioRepository.save(new Studio(name.trim()));
+        return studioFound != null ? studioFound : save(new Studio(name));
+    }
+
+    @Transactional
+    public Studio save(Studio studio) {
+        return studioRepository.save(studio);
     }
 
     public List<Studio> findAll() {
