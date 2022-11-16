@@ -69,10 +69,13 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.2.5.Final</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>4.5.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

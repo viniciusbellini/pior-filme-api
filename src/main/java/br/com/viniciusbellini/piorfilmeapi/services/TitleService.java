@@ -37,7 +37,6 @@ public class TitleService {
 
     public void generateTable(List<Record> allTitles) {
         getAllTitles(allTitles).forEach(this::save);
-//        saveAll(getAllTitles(allTitles));
     }
 
     @Transactional

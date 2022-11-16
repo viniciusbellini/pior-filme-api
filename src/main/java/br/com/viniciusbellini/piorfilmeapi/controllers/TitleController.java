@@ -29,7 +29,6 @@ public class TitleController {
 
     @PostMapping
     public ResponseEntity<Title> create(@RequestParam("file") MultipartFile titles) {
-        //validar arquivo vazio
         titleService.uploadFile(titles);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
