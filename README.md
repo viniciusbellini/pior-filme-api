@@ -28,11 +28,14 @@ Após concluir as instalações de depedências e certificar que o arquivo movie
 basta clicar com o botão direito sobre o arquivo "PiorFilmeApiApplication.java" no package "br/com/desafiotexoit/" e clicar em (run as) Java application.
 Por padrão o servidor ficará disponível na porta 8080.
 
+**Intervalo de prêmios**
+
+Endpoint disponível "/awardInterval"
 
 Para obter a lista de intervalo de prêmios acessar o link: "http://localhost:8080/awardInterval"
 
 
-A api irá retorna um json contendo o produtor com maior intervalo entre dois prêmios consecutivos, e o que obteve dois prêmios mais rápido, conforme o exemplo abaixo:
+A api retornará um json contendo o produtor com maior intervalo entre dois prêmios consecutivos, e o que obteve dois prêmios mais rápido, conforme o exemplo abaixo:
 
 ```
 {
@@ -50,7 +53,7 @@ A api irá retorna um json contendo o produtor com maior intervalo entre dois pr
     "interval": 13,
     "previousWin": 2002,
     "followingWin": 2015
-  }
+    }
   ]
 }
 ```

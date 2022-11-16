@@ -22,11 +22,6 @@ public class TitleController {
         this.titleService = titleService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Title>> allTitles() {
-        return ResponseEntity.ok().body(titleService.findAll());
-    }
-
     @PostMapping
     public ResponseEntity<List<Title>> uploadFile(@RequestParam("file") MultipartFile titles) {
         return ResponseEntity.status(HttpStatus.CREATED).body(titleService.uploadFile(titles));
